@@ -1,5 +1,5 @@
 classDiagram
-  direction LR
+direction LR
   class Cuenta{
     nombre
     apellido
@@ -13,7 +13,7 @@ classDiagram
     pais: paisOrigen
     metaEntrenamiento: metasEntrenamiento
     }
-  Cuenta --> "*"metaEntrenamiento
+  
 
   class tipoDocumento{
     nombre
@@ -55,6 +55,7 @@ classDiagram
     metaEntrenamiento --> "1" tipoActividad
     metaEntrenamiento --> "1" tipoObjetivo
     metaEntrenamiento --> "*" cambioEstadoMeta
+    Cuenta --> "*"metaEntrenamiento
     
     class cambioEstadoMeta{
       fechaInicio
@@ -69,8 +70,6 @@ classDiagram
       }
 
     class Entrenamiento{
-      ubicacionInicial
-      ubicacionFinal
       fechaHoraInicio
       fechaHoraFin
       metaEntrenamiento: metaEntrenamiento
@@ -82,6 +81,7 @@ classDiagram
     Entrenamiento --> "1" tipoActividad
     Entrenamiento --> "0..1" metaEntrenamiento
     Entrenamiento --> "1" RutaRecorrida
+    Entrenamiento --> "1" Cuentaimage.png
     class RutaRecorrida{
       ubicacionInicial
       ubicacionFinal
