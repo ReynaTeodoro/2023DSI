@@ -39,7 +39,7 @@ class Llamada:
     def getDuracion(self):
         return self.duracion
 
-    def getFechaHoraInicio(self):
+    def determinarEstadoInicial(self):
         for unCambioDeEstado in self.cambiosDeEstado:
             if unCambioDeEstado.esEstadoInicial():
                 return unCambioDeEstado.getFechaHoraInicio()
@@ -59,12 +59,12 @@ class Llamada:
         return cambioEstadoActual.getNombreEstado()
     
     def getRespuestas(self):
-        respuestas = []
+        preguntas = []
         valoresSeleccionados = []
         for unaRespuesta in self.respuestasDeEncuesta:
-            respuestas.append(unaRespuesta.getDescripcionRta())
+            preguntas.append(unaRespuesta.getDescripcionRta())
             valoresSeleccionados.append(unaRespuesta.obtenerValorSeleccionado())
-        return respuestas, valoresSeleccionados
+        return preguntas, valoresSeleccionados
 
     def mostrarDatosLlamada(self, listaDeEncuestas):
         nombreCliente = self.getNombreClienteLlamada()
@@ -76,7 +76,7 @@ class Llamada:
         return {"nombreCliente": nombreCliente, 
                 "ultimoEstado": ultimoEstado, 
                 "duracion": duracion,
-                "respuestas": preguntas, 
+                "preguntas": preguntas, 
                 "valoresSeleccionados": valoresSeleccionados,
                 "encuesta":encuesta}
 

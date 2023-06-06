@@ -10,12 +10,6 @@ class Encuesta:
     def agregarPreguntas(self, unPregunta):
         self.preguntas.append(unPregunta)
 
-    def armarEncuesta(self):
-        pass
-
-    def esVigente(self):
-        pass
-
     def getDescripcionEncuesta(self):
         return self.descripcion
     def __str__(self):

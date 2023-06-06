@@ -9,8 +9,6 @@ class Pregunta:
     def getDescripcion(self):
         return self.pregunta
 
-    def listarRespuestasPosibles(self):
-        pass
 
     def obtenerEncuesta(self, listaDeEncuestas):
         for encuesta in listaDeEncuestas:

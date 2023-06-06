@@ -14,7 +14,6 @@ class ControladorConsultaEncuesta:
        self.llamadaSeleccionada = None
        self.formatoSeleccionado = None
        self.datosLlamada = None
-       self.seleccionFormato = None
        self.pantalla = pantalla
 
     def tomarSeleccionFechaInicio(self, fecha):
@@ -49,9 +48,10 @@ class ControladorConsultaEncuesta:
         return self.datosLlamada
     
     def tomarSeleccionFormato(self, seleccion):
-        if seleccion == "CSV":
+        self.formatoSeleccionado = seleccion
+        if self.formatoSeleccionado == "CSV":
             self.generarInformeCSV()
-        elif seleccion == "IMPRIMIR":
+        elif self.formatoSeleccionado == "IMPRIMIR":
             self.generarImpresion()
         else:
             raise ValueError(f'No se puede imprimir en formato {seleccion!r}')

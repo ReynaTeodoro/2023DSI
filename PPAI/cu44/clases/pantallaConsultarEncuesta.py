@@ -151,7 +151,7 @@ class Ui_PantallaConsultarEncuesta:
             contador = 0
             for i in datos:
                 self.llamadas_tbl.setItem(contador,0,QtWidgets.QTableWidgetItem(str(i.getNombreClienteLlamada())))
-                self.llamadas_tbl.setItem(contador,1,QtWidgets.QTableWidgetItem(str(i.getFechaHoraInicio())))
+                self.llamadas_tbl.setItem(contador,1,QtWidgets.QTableWidgetItem(str(i.determinarEstadoInicial())))
                 self.llamadas_tbl.setItem(contador,2,QtWidgets.QTableWidgetItem(str(i.getDuracion())))
                 contador +=1
     def tomarSeleccionLlamada(self, row, column):
@@ -170,8 +170,8 @@ class Ui_PantallaConsultarEncuesta:
         self.llamadaSelected_tbl.setItem(3,2,QtWidgets.QTableWidgetItem("Descripcion de Pregunta"))
         self.llamadaSelected_tbl.setItem(3,3,QtWidgets.QTableWidgetItem("Valor Seleccionado"))
         self.llamadaSelected_tbl.setItem(3,4,QtWidgets.QTableWidgetItem("Descripcion de Encuesta"))
-        for i in range(len(llamada["respuestas"])):
-            self.llamadaSelected_tbl.setItem(i+4,2,QtWidgets.QTableWidgetItem(llamada["respuestas"][i]))
+        for i in range(len(llamada["preguntas"])):
+            self.llamadaSelected_tbl.setItem(i+4,2,QtWidgets.QTableWidgetItem(llamada["preguntas"][i]))
             self.llamadaSelected_tbl.setItem(i+4,3,QtWidgets.QTableWidgetItem(llamada["valoresSeleccionados"][i]))
             self.llamadaSelected_tbl.setItem(i+4,4,QtWidgets.QTableWidgetItem(llamada["encuesta"]))
         

@@ -1,5 +1,6 @@
 @startuml
 left to right direction
+
 entity Llamada <<entity>>{
 descripcionOperador
 detalleAccionRequerida
@@ -11,20 +12,16 @@ cambioEstado:CambioEstado
 cliente:Cliente
 
 new()
-calcularDuracion()
+agregarCambioEstado()
+agregarRespuestaDeEncuesta()
 determinarEstadoInicial()
-determinarUltimoEstado()
 esDePeriodo()
-getDuracion()
-getNombreClienteDeLlamada()
 tieneEncuestaRespondida()
-mostrarDatos()
-obtenerEncuesta()
+getDuracion()
+getNombreClienteLlamada()
 determinarUltimoEstado()
 getRespuestas()
-setDescripcionOperador()
-setDuracion()
-setEstadoActual()
+mostrarDatosLlamada()
 
 }
 
@@ -32,22 +29,26 @@ entity RespuestaDeCliente <<entity>>{
 fechaEncuesta
 respuestaSeleccionada: RespuestaPosible
 
+new()
 getDescripcionRta()
+obtenerValorSeleccionado()
 obtenerEncuesta()
+getRespuesta()
 }
+
 entity RespuestaPosible <<entity>>{
 descripcion
 valor
-
+getRespuesta()
 getDescripcionRta()
 obtenerEncuesta()
 }
+
 entity Pregunta<<entity>>{
 respuesta: Respuesta
 pregunta
 
 getDescripcion()
-listarRespuestasPosibles()
 obtenerEncuesta()
 }
 
@@ -56,38 +57,55 @@ pregunta: Pregunta
 descripcion
 fechaFinVigencia
 
-armarEncuesta()
-esVigente()
+new()
 getDescripcionEncuesta()
+agregarPreguntas()
 }
 
 entity CambioEstado <<entity>>{
 fechaHoraInicio
+estado:Estado
+
+new()
 esEstadoInicial()
 getFechaHoraInicio()
 getNombreEstado()
-new()
 esUltimoCambioEstado()
+obtenerEstadoActual()
 }
+
 entity Estado <<entity>>{
 nombre
 
+new()
 esFinalizada()
 esIniciada()
 getNombre()
 }
+
 entity Cliente <<entity>>{
 dni
 nombreCompleto
 nroCelular
 
-
 getNombre()
 }
+
 interface PantallaConsultarEncuesta<<Boundary>>{
-fechaInicioInput
-fechaFinInput
-llamadaLbl
+fechaHoraInicio_lbl
+fechaHoraFin_lbl
+fechaInicio_input
+fechaFin_input
+buscarLlamada_btn
+llamadas_tbl
+cancelar_btn
+llamadaSelected_tbl
+llamadasEnPeriodo_lbl
+datosLlamada_lbl
+formato_lbl
+formato_input
+confirmar_btn
+
 
 
 opcConsultarEncuesta()
@@ -95,9 +113,11 @@ habilitarPantalla()
 solicitarPeriodo()
 tomarSeleccionFechaInicio()
 tomarSeleccionFechaFin()
+actualizarTablaLlamada()
 pedirSeleccionLlamada()
 tomarSeleccionLlamada()
 mostrarDatosLlamada()
+cancelarOperacion()
 pedirSeleccionFormato()
 tomarSeleccionFormato()
 }
@@ -106,18 +126,23 @@ tomarSeleccionFormato()
 abstract ControlConsultarEncuesta<<Control>>{
 fechaHoraInicio
 fechaHoraFin
-llamadasEnPeriodoRespondidas
 llamadaSeleccionada
+llamdasEnPeriodoRespondidas
 formatoSeleccionado
+datosLlamada
 
 consultarEncuesta()
 tomarSeleccionFechaInicio()
 tomarSeleccionFechaFin()
 buscarLlamadasRespondidas()
 tomarSeleccionLlamada()
+agregarLlamadaEnPerido()
 obtenerDatosLlamada()
+getDatosLlamada()
 tomarSeleccionFormato()
 generarInformeCSV()
+cancelarOperacion()
+generarImpresion()
 finCU()
 }
 
@@ -135,7 +160,7 @@ ControlConsultarEncuesta ..> PantallaConsultarEncuesta
 ControlConsultarEncuesta <.. PantallaConsultarEncuesta
 
 ControlConsultarEncuesta ..> Llamada
-Pregunta ..> Encuesta
+ControlConsultarEncuesta ..> Encuesta
 
 
 @enduml
