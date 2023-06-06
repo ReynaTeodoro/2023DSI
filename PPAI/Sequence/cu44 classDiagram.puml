@@ -59,6 +59,7 @@ descripcion
 fechaFinVigencia
 
 new()
+esDeEncuesta()
 getDescripcionEncuesta()
 agregarPreguntas()
 }
