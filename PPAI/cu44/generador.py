@@ -19,8 +19,9 @@ class GeneradorAleatorio:
             estadosBD.append(Estado(estadito))
         
     def generarCambioDeEstado(self,unEstado):
-        start_date = datetime.datetime.now()
-        end_date = start_date + datetime.timedelta(days=20)
+        end_date = datetime.datetime.now()
+        start_date = datetime.datetime.now() - datetime.timedelta(days=40)
+        
         random_date = start_date + (end_date - start_date) * random.random()
         if unEstado == 0:
             cambioEstadito = CambioEstado(random_date,estadosBD[0])
@@ -98,7 +99,7 @@ class GeneradorAleatorio:
             self.generarEncuestas()
         self.generadorClientes()
         self.generarEncuestas()
-        for i in range(10):
+        for i in range(20):
             self.generarLlamada()
 
 

@@ -5,15 +5,15 @@ from clases.Encuesta import encuestasBD
 from PyQt5.QtCore import QDate, QDateTime
 import pandas as pd
 class ControladorConsultaEncuesta:
+    listaLlamadas = llamadasBD
+    listaEncuestas = encuestasBD
     def consultarEncuesta(self, pantalla):
        self.fechaHoraInicio = None
        self.fechaHoraFin = None
        self.llamadasEnPeriodoRespondidas = []
        self.llamadaSeleccionada = None
        self.formatoSeleccionado = None
-       self.listaLlamadas = llamadasBD
        self.datosLlamada = None
-       self.listaEncuestas = encuestasBD
        self.seleccionFormato = None
        self.pantalla = pantalla
 
@@ -54,18 +54,23 @@ class ControladorConsultaEncuesta:
         elif seleccion == "IMPRIMIR":
             self.generarImpresion()
         else:
-            print("Formato no valido !")
+            raise ValueError(f'No se puede imprimir en formato {seleccion!r}')
+        
 
     def cancelarOperacion(self):
         raise SystemExit(0)
 
     def generarInformeCSV(self):
+        if self.datosLlamada is None:
+            raise ValueError('No hay datos :(')
         datosLlamada = self.datosLlamada
         df = pd.DataFrame(datosLlamada)
         df.to_csv('informe.csv', index=False)
-
-
+        
     def generarImpresion(self):
+        if self.datosLlamada is None:
+            raise ValueError('No hay datos :(')
         datosLlamada = self.datosLlamada
         df = pd.DataFrame(datosLlamada)
         df.to_markdown('informe.md', index=False)
+        

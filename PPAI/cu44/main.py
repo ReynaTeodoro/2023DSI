@@ -6,25 +6,20 @@ from generador import GeneradorAleatorio
 from PyQt5 import QtWidgets
 
 
-def main() -> int:
+def main():
     #populate de los datos
     generador = GeneradorAleatorio()
     generador.inicializar()
-    #habilita Pantalla:
-    app = QtWidgets.QApplication(sys.argv)
-    PantallaConsultarEncuesta = QtWidgets.QMainWindow()
-    ui = Ui_PantallaConsultarEncuesta()
-    #iniciamos el controlador
-    controlador = ControladorConsultaEncuesta()
-    controlador.consultarEncuesta(ui)
 
-    ui.habilitarPantalla(PantallaConsultarEncuesta,controlador)
-    return 0
+    # iniciamos el controlador
+    controlador = ControladorConsultaEncuesta()
+    ui = Ui_PantallaConsultarEncuesta(controlador)
+    
+    ui.habilitarPantalla(controlador)
+    
 
 if __name__ == '__main__':
-    raise SystemExit(main())
-    
-    
+    main()
 
 
 
