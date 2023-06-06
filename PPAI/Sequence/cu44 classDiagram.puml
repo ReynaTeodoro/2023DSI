@@ -34,7 +34,6 @@ respuestaSeleccionada: RespuestaPosible
 
 getDescripcionRta()
 obtenerEncuesta()
-getRespuesta()
 }
 entity RespuestaPosible <<entity>>{
 descripcion
@@ -82,7 +81,7 @@ dni
 nombreCompleto
 nroCelular
 
-esCliente()
+
 getNombre()
 }
 interface PantallaConsultarEncuesta<<Boundary>>{
