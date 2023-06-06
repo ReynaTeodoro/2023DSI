@@ -12,5 +12,15 @@ class Encuesta:
 
     def getDescripcionEncuesta(self):
         return self.descripcion
+    def esDeEncuesta(self, pregunta):
+        if pregunta in self.preguntas:
+            return True
+        return False
+    def esDeEncuestaRespuesta(self, respuestaPosible):
+        # recorre la lista de preguntas de la encuesta y verifica que la pregunta sea de la encuesta
+        for unaPregunta in self.preguntas:
+            if unaPregunta.esDePregunta(respuestaPosible):
+                return True
+            return False
     def __str__(self):
         return self.descripcion

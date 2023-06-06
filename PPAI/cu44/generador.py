@@ -50,7 +50,7 @@ class GeneradorAleatorio:
         listaRespuestas = []
         for i in respuestasPosibles:
             listaRespuestas.append(GeneradorAleatorio().generarRespuestasPosibles(i))
-        nuevaPregunta = Pregunta("Pregunta1", listaRespuestas)
+        nuevaPregunta = Pregunta("Pregunta"+str(len(preguntasBD)+1), listaRespuestas)
         preguntasBD.append(nuevaPregunta)
 
         return nuevaPregunta

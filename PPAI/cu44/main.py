@@ -13,8 +13,9 @@ def main():
 
     # iniciamos el controlador
     controlador = ControladorConsultaEncuesta()
+    #opc consultar encuesta
     ui = Ui_PantallaConsultarEncuesta(controlador)
-    
+    #habiliarPatalla()
     ui.habilitarPantalla(controlador)
     
 

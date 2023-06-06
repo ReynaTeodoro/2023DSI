@@ -14,6 +14,7 @@ class Estado:
             return False
 
     def esIniciada(self):
+        #retorna true si el estado tiene como nombre iniciada
         if self.nombre == "Iniciada":
             return True
         else:

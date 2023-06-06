@@ -6,13 +6,16 @@ class RespuestaDeCliente:
         self.fechaEncuesta = fechaEncuesta
         self.respuestaSeleccionada = respuestaSeleccionada
     
-    def getDescripcionRta(self):
-        return self.respuestaSeleccionada.getDescripcionRta()
+    def getDescripcionRta(self,listaPreguntas):
+        # llama al metodo getDescripcionRta de la clase RespuestaPosible y retorna el resultado
+        return self.respuestaSeleccionada.getDescripcionRta(listaPreguntas)
 
     def obtenerValorSeleccionado(self):
+        # obtiene el valor seleccionado por el cliente
         return self.respuestaSeleccionada.getValor()
-    def obtenerEncuesta(self, listaDeEncuestas):
-        return self.respuestaSeleccionada.obtenerEncuesta(listaDeEncuestas)
+    def obtenerEncuesta(self, listaDeEncuestas, listaPreguntas):
+        #recibe la lista de encuesta y se la pasa a la respuestaPosible
+        return self.respuestaSeleccionada.obtenerEncuesta(listaDeEncuestas,listaPreguntas)
 
     def getRespuesta(self):
         return self

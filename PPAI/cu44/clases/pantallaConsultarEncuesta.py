@@ -98,13 +98,14 @@ class Ui_PantallaConsultarEncuesta:
         self.llamadas_tbl.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.llamadaSelected_tbl.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
-
+        # aca se determinan los eventos de los botones para ejecutar las funciones y recibir los datos del actor
         self.buscarLlamada_btn.clicked.connect(self.tomarSeleccionFechaInicio)
         self.buscarLlamada_btn.clicked.connect(self.tomarSeleccionFechaFin)
         self.llamadas_tbl.cellClicked.connect(self.tomarSeleccionLlamada)
         self.cancelar_btn.clicked.connect(self.cancelarOperacion)
         self.confirmar_btn.clicked.connect(self.tomarSeleccionFormato)
 
+        #muestra la pantalla
         PantallaConsultarEncuesta.show()
 
     def retranslateUi(self, PantallaConsultarEncuesta):
@@ -123,21 +124,30 @@ class Ui_PantallaConsultarEncuesta:
         self.confirmar_btn.setText(_translate("PantallaConsultarEncuesta", "Generar Informe"))
 
     def habilitarPantalla(self,controlador):
+        #inicia la pantalla y llama al metodo consultarEncuesta del controlador para generarlo
         app = QtWidgets.QApplication(sys.argv)
         self.app = app
         PantallaConsultarEncuesta = QtWidgets.QMainWindow()
         ui = self
         ui.setupUi(PantallaConsultarEncuesta)
+        #controlar ejecuta consultarEncuesta
         controlador.consultarEncuesta(ui)
         sys.exit(app.exec_())
 
     def tomarSeleccionFechaInicio(self):
+        #obtiene la fecha inicio del inputLbl y se la pasa al controlador
         self.controlador.tomarSeleccionFechaInicio(self.fechaInicio_input.dateTime())
+
     def tomarSeleccionFechaFin(self):
+        #obtiene la fecha fin del inputLbl y se la pasa al controlador
         self.controlador.tomarSeleccionFechaFin(self.fechaFin_input.dateTime())
-        self.controlador.buscarLlamadasRespondidas()
-    def actualizarTablaLlamadas(self,datos):
-        if len(datos)== 0:
+        
+
+    def actualizarTablaLlamadas(self,llamadasEnPeridoRespondidas):
+        #recibe la lista de llamadas en periodo y las renderiza en la tabla
+        #verifica que la lista recibida sea mayor a 0
+        if len(llamadasEnPeridoRespondidas)== 0:
+            #muestra un mensaje de error cu alternativo A1 no hay llamadas en el periodo
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setText("Error")
@@ -145,19 +155,24 @@ class Ui_PantallaConsultarEncuesta:
             msg.setWindowTitle("No hay Llamadas en el periiodo")
             msg.exec_()
         else:
+            #vacia la tabla y la renderiza con los datos recibidos
             self.llamadas_tbl.setRowCount(0)
-            self.llamadas_tbl.setRowCount(len(datos))
+            self.llamadas_tbl.setRowCount(len(llamadasEnPeridoRespondidas))
             self.llamadas_tbl.setColumnCount(3)
             contador = 0
-            for i in datos:
-                self.llamadas_tbl.setItem(contador,0,QtWidgets.QTableWidgetItem(str(i.getNombreClienteLlamada())))
-                self.llamadas_tbl.setItem(contador,1,QtWidgets.QTableWidgetItem(str(i.determinarEstadoInicial())))
-                self.llamadas_tbl.setItem(contador,2,QtWidgets.QTableWidgetItem(str(i.getDuracion())))
+            for unaLlamada in llamadasEnPeridoRespondidas:
+                # utiliza el controlador para obtener los datos de la llamada y renderizarlos en la tabla
+                self.llamadas_tbl.setItem(contador,0,QtWidgets.QTableWidgetItem(str(self.controlador.obtenerNombreClienteLlamada(unaLlamada))))
+                self.llamadas_tbl.setItem(contador,1,QtWidgets.QTableWidgetItem(str(self.controlador.obtenerUltimoEstadoLlamada(unaLlamada))))
+                self.llamadas_tbl.setItem(contador,2,QtWidgets.QTableWidgetItem(str(self.controlador.obtenerDuracionLlamada(unaLlamada))))
                 contador +=1
     def tomarSeleccionLlamada(self, row, column):
+        # toma la seleccion de la tablaLlamadas obteniendo la fila seleccionada y se la pasa al controlador
+        # ejecuta el metodo tomarSeleccionLlamada del controlador
         self.controlador.tomarSeleccionLlamada(self.controlador.llamadasEnPeriodoRespondidas[row])
 
     def mostrarDatosLlamada(self,llamada):
+        # recibe los datos de la llamada seleccionada y los renderiza en la tabla
         self.llamadaSelected_tbl.setRowCount(0)
         self.llamadaSelected_tbl.setRowCount(len(llamada))
         self.llamadaSelected_tbl.setItem(0,0,QtWidgets.QTableWidgetItem("Nombre Cliente"))
@@ -170,15 +185,18 @@ class Ui_PantallaConsultarEncuesta:
         self.llamadaSelected_tbl.setItem(3,2,QtWidgets.QTableWidgetItem("Descripcion de Pregunta"))
         self.llamadaSelected_tbl.setItem(3,3,QtWidgets.QTableWidgetItem("Valor Seleccionado"))
         self.llamadaSelected_tbl.setItem(3,4,QtWidgets.QTableWidgetItem("Descripcion de Encuesta"))
+        # por cada pregunta genera una fila en la tabla y lo ordena
         for i in range(len(llamada["preguntas"])):
             self.llamadaSelected_tbl.setItem(i+4,2,QtWidgets.QTableWidgetItem(llamada["preguntas"][i]))
             self.llamadaSelected_tbl.setItem(i+4,3,QtWidgets.QTableWidgetItem(llamada["valoresSeleccionados"][i]))
             self.llamadaSelected_tbl.setItem(i+4,4,QtWidgets.QTableWidgetItem(llamada["encuesta"]))
         
     def cancelarOperacion(self):
+        # llama al controlador para cancelar la operacion
         self.controlador.cancelarOperacion()
 
     def tomarSeleccionFormato(self):
+        # toma la seleccion del formato y se la pasa al controlador
         msg = QMessageBox()
         try:
             self.controlador.tomarSeleccionFormato(self.formato_input.currentText())

@@ -48,6 +48,7 @@ entity Pregunta<<entity>>{
 respuesta: Respuesta
 pregunta
 
+esDePregunta()
 getDescripcion()
 obtenerEncuesta()
 }
