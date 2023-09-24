@@ -96,9 +96,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>370</y>
+      <y>430</y>
       <width>871</width>
-      <height>221</height>
+      <height>151</height>
      </rect>
     </property>
    </widget>
@@ -170,6 +170,45 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="datoLlamada_lbl_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>231</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cliente: Jose</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="datoLlamada_lbl_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>390</y>
+      <width>231</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cliente: Estado</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="datoLlamada_lbl_4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>410</y>
+      <width>231</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Respuestas:</string>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

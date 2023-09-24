@@ -1,0 +1,87 @@
+@startuml
+package "presentacion" as front{
+  component clientesPresMobile
+  component prestadoresPresMobile
+  
+}
+package "persistencia" as db{
+  component persistencia
+  component BD
+  persistencia ..> BD
+}
+back --( "materializar"
+back --( "desmaterializar"
+db --0 "materializar"
+db --0 "desmaterializar"
+
+clientesPresMobile --("Clientes"
+prestadoresPresMobile --("Prestadores"
+package "logica" as back{
+  
+  package "S.S CLientes" as SysClientes{
+    component cliente
+  }
+  SysClientes --0 "logicaClientes"
+  SysClientes --( "authe"
+  package "S.S. Prestadores" as SysPrestadores{
+    component solicitudes
+    component prestador
+    solicitudes ..> prestador
+    component #red interfaceAgenda
+    component #red interfaceMaps
+  }
+  SysPrestadores --( "authe"
+  SysPrestadores --0 "logicaPrestadores"
+  SysPrestadores --( "Especialidades"
+
+  package "S.S.Usuarios" as SysUsuarios{
+    component usuario
+    component session
+    component permisos
+    usuario ..> session
+    usuario --> permisos
+  }
+  SysUsuarios --0 "auth"
+  package "S.S. Servicios" as SysServicios{
+    component servicio
+  }
+  SysServicios --( "Especialidad"
+  SysServicios --( "Prestador"
+  SysServicios --0 "logicaServicios"
+  package "S.S. Especialidades" as SysEspecialidades{
+    component especialidad
+  }
+  SysEspecialidades --0 "logicaEspecialidades"
+  package "S.S. Turnos" as SysTurnos{
+    component turno
+    component cancelaciones
+    component #red InterfaceWhattsapp
+    turno ..> cancelaciones
+    component #red InterfaceMercadoPago
+    component #red InterfacePush
+  }
+  SysTurnos --0 "logicaTurnos"
+  SysTurnos --( "Servicios"
+  package "S.S Solicitudes" as SysSolicitudes{
+    component solicitud
+    component #red InterfacePush
+
+    
+  } 
+  SysSolicitudes --0 "logicaSolicitudes"
+  SysSolicitudes --( "Turnos"
+  SysSolicitudes --( "Servicios"
+  SysSolicitudes --( "Prestadores"
+  package "S.S. Reportes"{
+    component #red reportes
+    component #red Estadisticas
+  }
+  package "S.S Multas" as SysMultas{
+    component #red Multas
+  }
+  SysMultas --( "Turnos"
+  SysMultas --( "Servicios"
+
+
+
+@enduml
