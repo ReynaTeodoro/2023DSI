@@ -1,0 +1,37 @@
+@startuml
+node "Cliente Web" as presWeb <<device>>#E1F5FE{
+component [ExploradorWeb] #DCE775 
+}
+
+node "servidor Web" as NodeservidorWeb #E1F5FE{
+component [servidorWeb] #C5CAE9
+component [EncuestaPresWeb] #C5CAE9
+component [llamadasPresWeb] #C5CAE9
+component [clientesPresWeb] #C5CAE9
+component [operadorPresWeb] #C5CAE9
+component [auditoriaPresWeb] #C5CAE9
+component [usuarioPresWeb] #C5CAE9
+component [opcionesPresWeb] #C5CAE9
+component [reportesPresWeb] #C5CAE9
+}
+node "Servidor Aplicaciones" as NodeApps #E1F5FE{
+component [Persistencia] #4DB6AC
+component GestorDeOpciones <<subsistema>> #fae4fc
+component GestorDeUsuarios <<subsistema>> #fae4fc
+component GestorDeOperador <<subsistema>> #fae4fc
+component GestorDeAuditoria <<subsistema>> #fae4fc
+component GestorDeReportes <<subsistema>> #fae4fc
+component [cliente] #fae4fc
+component [validaciones] #fae4fc
+component [interfazValidadorCliente] 
+
+}
+node ServidorSMS
+node "Servidor de Base de datos" as NodeBD #E1F5FE{
+component [Base de Datos] #ffc77d
+}
+presWeb -- NodeservidorWeb 
+NodeservidorWeb ------ NodeApps
+NodeApps-- NodeBD
+
+@enduml
