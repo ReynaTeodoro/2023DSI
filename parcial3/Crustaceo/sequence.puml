@@ -1,0 +1,43 @@
+@startuml
+actor "Responsable de reclamos" as responsable
+control "Gestor de reclamos" as gestor
+entity cliente
+entity pedido
+entity estado
+entity reclamo
+entity tipoReclamo
+boundary PantallaReporte
+
+gestor -> gestor : calcularTasaReclamo()
+gestor ->gestor: buscarPedidosReclamosDeCliente()
+loop Mientras haya pedidos clientes
+gestor -> gestor: calcularTasaCliente
+loop Mientras haya pedidos de cliente seleccionado
+gestor -> pedido: esDeCliente()
+activate pedido #purple
+deactivate pedido
+gestor -> pedido: esDePeriodo()
+activate pedido #purple
+gestor -> pedido:esEntregado()
+pedido -> estado: esEntregado()
+deactivate pedido
+gestor -> pedido: esCobrado()
+pedido -> estado: esCobrado()
+gestor -> pedido: tieneReclamoCritico()
+activate pedido #purple
+note right of gestor
+delegamos de inicio de primer loop 
+hasta calcularTasaTotal
+end note
+pedido -> pedido: obtenerReclamo()
+pedido -> reclamo: esCritico()
+reclamo -> tipoReclamo: esCritico()
+deactivate pedido
+end
+end
+gestor -> gestor: calcularTasaTotal()
+gestor -> gestor: generarReporte()
+gestor -> gestor: obtenerFechaActual()
+gestor -> PantallaReporte: visualizar()
+gestor -> gestor: finCU()
+@enduml

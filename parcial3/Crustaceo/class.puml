@@ -1,0 +1,48 @@
+@startuml
+class GestorReporteReclamos{
+  clientesSeleccionados
+  fechaActual
+  fechaDesde
+  fechaHasta
+  formaVisualizacion
+  tasaPorCLiente
+  tipoTasa
+
+  calcularTasaCliente()
+  crearEstrategia()
+  crearIterador()
+  generarReporte()
+  tomarSeleccionTipoTasa()
+}
+class EstrategiaTasaReclamos <<interface>>{
+  calcularTasaClientes(fechadesde, fechahasta, clientesSeleccionados,pedidos)
+}
+class TasaBruta <<estrategia>>{
+  calcularTasaCliente(fechaDesde, fechaHasta, clientesSeleccionados,pedidos)
+  new()
+}
+class TasaNoCrititcos <<estrategia>>{
+  calcularTasaCliente(fechaDesde, fechaHasta, clientesSeleccionados,pedidos)
+  new()
+}
+class TasaCriticos <<estrategia>>{
+  calcularTasaCliente(fechaDesde, fechaHasta, clientesSeleccionados,pedidos)
+  new()
+}
+class PantallaGeneracionReportesReclamos <<boundary>>{
+  cmbTipoTasa
+  tomarSeleccionTipoTasa()
+}
+note "contexto" as n1
+n1 .. GestorReporteReclamos
+n1 ..EstrategiaTasaReclamos
+
+note left of  EstrategiaTasaReclamos
+"Estrategia"
+end note
+GestorReporteReclamos .. EstrategiaTasaReclamos
+EstrategiaTasaReclamos <|-- TasaBruta
+EstrategiaTasaReclamos <|-- TasaNoCrititcos
+EstrategiaTasaReclamos <|-- TasaCriticos
+PantallaGeneracionReportesReclamos .. GestorReporteReclamos
+@enduml

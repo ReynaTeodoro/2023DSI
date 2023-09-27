@@ -1,0 +1,118 @@
+@startuml
+folder "<<subsystem>> Capa de negocio persistente" as logica{
+  
+  folder "S.S Usuario" as userSys{
+    component Usuario
+    component Perfil
+    component Sesion
+    component #red interfazGoogle
+    component #red validarIdentidad
+    Usuario ..> Perfil
+    Usuario ..> Sesion
+
+    validarIdentidad --> Perfil
+    interfazGoogle --> Usuario
+  }
+  
+  folder "S.S orden" as ordenSys{
+    component OrdenMilitar
+  }
+  folder "S.S base militar" as baseSys{
+    component BaseMilitar
+    component UnidadMilitar
+    Base ..> UnidadMilitar
+  }
+  folder "S.S Soldado" as soldadoSys{
+    component Soldado
+    component Rango
+    Soldado ..>Rango
+  }
+  folder "S.S Misiones" as misionesSys{
+    component Mision
+    component suministro
+    Mision --> suministro
+  }
+  folder "S.S Seccion" as seccionSys{
+    component Seccion
+    component habitacion
+    Seccion --> habitacion
+  }
+
+  
+}
+folder "<<subsystem>> capa de negocio No persistente" as logicaNoBd{
+  
+  folder "S.S Reportes" as reporteSys{
+    component "Generar Reporte" as reporte
+    component "Generar Estadistica" as estadistica
+  }
+  folder "S.S Notificacion" as notificacionSys{
+    component "Notificar SMS" as sms
+    component "Notificar Email" as email
+  }
+
+  folder "S.S Puertas" as puertasSys{
+    component "Lector Puertas" as puertas
+    component "Lector ocular" as ocular
+  }
+}
+
+folder "<<subsystem>> Admin Persistencia" as SysBD{
+  
+  folder "Sistema Persistencia" as sysPersistencia{
+      component persistencia
+      component BD
+      persistencia ..> BD
+
+  }
+
+
+}
+folder "<<subsystem>> capa de presentacio" as front{
+  component presUsuario
+  component presSoldado
+  component presUnidadMilitar
+  component presSeccion
+  component presMision
+  component presReportes
+
+  
+}
+
+
+
+
+
+
+presUsuario --(0- userSys : "logica Usuario"
+presSoldado --(0- soldadoSys : "lider"
+presSoldado --(0- soldadoSys : "soldado"
+presUnidadMilitar --(0- baseSys :"Base Militar"
+presSeccion --(0- seccionSys : "Seccion"
+presMision --(0- misionesSys : "Mision"
+presReportes --(0- reporteSys : "logica Reportes"
+
+SysBD --0)- logica : "Materializar"
+SysBD --0)- logica : "DesMaterializar"
+
+  puertas --(0- userSys : "Validacion Identidad"
+  puertas --0)- userSys : "datos biometricos"
+
+  notificacionSys --(0- ordenSys : "Orden Reubicacion"
+  reporteSys --(0- ordenSys : "Orden Reubicacion"
+
+
+
+userSys --0)- baseSys : "Auth" 
+  userSys --0)- soldadoSys : "Auth"
+  userSys --0)- ordenSys: "Auth"
+
+  ordenSys --(0- baseSys : "Base militar"
+  ordenSys --(0- baseSys : "Unidad Militar"
+  ordenSys --(0- logicaNoBd : "Orden reubicacion"
+
+  baseSys --(0- seccionSys : "Seccion"
+
+  soldadoSys --0)- puertasSys : "Lider"
+  soldadoSys --0)- puertasSys : "Soldado" 
+@enduml
