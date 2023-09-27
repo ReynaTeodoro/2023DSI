@@ -45,8 +45,8 @@ class Ui_PantallaConsultarEncuesta:
         self.verticalLayout.setObjectName("verticalLayout")
         self.llamadas_tbl = QtWidgets.QTableWidget(self.verticalLayoutWidget)
         self.llamadas_tbl.setObjectName("llamadas_tbl")
-        self.llamadas_tbl.setColumnCount(3)
-        self.llamadas_tbl.setHorizontalHeaderLabels(["Nombre Cliente","FechaInicio","Duracion"])
+        self.llamadas_tbl.setColumnCount(4)
+        self.llamadas_tbl.setHorizontalHeaderLabels(["Nombre Cliente","Ultimo Estado","Duracion","FechaInicio"])
         self.llamadas_tbl.setRowCount(0)
         
         self.verticalLayout.addWidget(self.llamadas_tbl)
@@ -62,7 +62,7 @@ class Ui_PantallaConsultarEncuesta:
         self.llamadaSelected_tbl.setGeometry(QtCore.QRect(0, 370, 871, 221))
         self.llamadaSelected_tbl.setObjectName("llamadaSelected_tbl")
         self.llamadaSelected_tbl.setColumnCount(5)
-        self.llamadaSelected_tbl.setHorizontalHeaderLabels(["Nombre Cliente","Ultimo Estado","Descripcion Preguntas","Valor Seleccionado","Encuesta"])
+        self.llamadaSelected_tbl.setHorizontalHeaderLabels(["Atributo","Valor","Descripcion Preguntas","Valor Seleccionado","Encuesta"])
         self.llamadasEnPeriodo_lbl = QtWidgets.QLabel(self.centralwidget)
         self.llamadasEnPeriodo_lbl.setGeometry(QtCore.QRect(0, 80, 331, 16))
         self.llamadasEnPeriodo_lbl.setObjectName("llamadasEnPeriodo_lbl")
@@ -146,6 +146,7 @@ class Ui_PantallaConsultarEncuesta:
     def actualizarTablaLlamadas(self,llamadasEnPeridoRespondidas):
         #recibe la lista de llamadas en periodo y las renderiza en la tabla
         #verifica que la lista recibida sea mayor a 0
+        self.llamadas_tbl.setRowCount(0)
         if len(llamadasEnPeridoRespondidas)== 0:
             #muestra un mensaje de error cu alternativo A1 no hay llamadas en el periodo
             msg = QMessageBox()
@@ -156,15 +157,15 @@ class Ui_PantallaConsultarEncuesta:
             msg.exec_()
         else:
             #vacia la tabla y la renderiza con los datos recibidos
-            self.llamadas_tbl.setRowCount(0)
             self.llamadas_tbl.setRowCount(len(llamadasEnPeridoRespondidas))
-            self.llamadas_tbl.setColumnCount(3)
+            self.llamadas_tbl.setColumnCount(4)
             contador = 0
             for unaLlamada in llamadasEnPeridoRespondidas:
                 # utiliza el controlador para obtener los datos de la llamada y renderizarlos en la tabla
                 self.llamadas_tbl.setItem(contador,0,QtWidgets.QTableWidgetItem(str(self.controlador.obtenerNombreClienteLlamada(unaLlamada))))
                 self.llamadas_tbl.setItem(contador,1,QtWidgets.QTableWidgetItem(str(self.controlador.obtenerUltimoEstadoLlamada(unaLlamada))))
                 self.llamadas_tbl.setItem(contador,2,QtWidgets.QTableWidgetItem(str(self.controlador.obtenerDuracionLlamada(unaLlamada))))
+                self.llamadas_tbl.setItem(contador,3,QtWidgets.QTableWidgetItem(str(self.controlador.determinarEstadoInicial(unaLlamada))))
                 contador +=1
     def tomarSeleccionLlamada(self, row, column):
         # toma la seleccion de la tablaLlamadas obteniendo la fila seleccionada y se la pasa al controlador

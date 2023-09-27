@@ -69,7 +69,9 @@ class ControladorConsultaEncuesta:
 
     def getDatosLlamada(self):
         return self.datosLlamada
-
+    def determinarEstadoInicial(self, unaLlamada):
+        # determina el estado inicial de la llamada
+        return unaLlamada.determinarEstadoInicial()
     def obtenerDatosLlamada(self):
         # Obtenemos los datos de la llamada seleccionada con el metodo de llamada mostrar datos de llamada
         self.datosLlamada = self.llamadaSeleccionada.mostrarDatosLlamada(self.listaEncuestas, self.listaPreguntas)
@@ -102,13 +104,15 @@ class ControladorConsultaEncuesta:
         #     "Duracion de llamada": self.datosLlamada["duracion"],
         # }
         # body = {
-        #     "Preguntas": self.datosLlamada["preguntas"],
-        #     "Respuestas": self.datosLlamada["valoresSeleccionados"],
-        #     "Encuesta": self.datosLlamada["encuesta"]
+        #      "Preguntas": self.datosLlamada["preguntas"],
+        #      "Respuestas": self.datosLlamada["valoresSeleccionados"],
+        #      "Encuesta": self.datosLlamada["encuesta"]
 
-        # }
+        #  }
+        # df = pd.DataFrame(body)
         df = pd.DataFrame(datosLlamada)
-        df.to_csv('informe.csv', index=False)
+        archivo = "informes/"+datosLlamada["nombreCliente"]+"_"+datosLlamada["ultimoEstado"] +"_" +str(datosLlamada["duracion"])+".csv"
+        df.to_csv(archivo, index=False)
         
     def generarImpresion(self):
         # genera un archivo md con los datos de la llamada seleccionada
@@ -116,5 +120,6 @@ class ControladorConsultaEncuesta:
             raise ValueError('No hay datos :(')
         datosLlamada = self.datosLlamada
         df = pd.DataFrame(datosLlamada)
-        df.to_markdown('informe.md', index=False)
+        archivo = "informes/"+datosLlamada["nombreCliente"]+"_"+datosLlamada["ultimoEstado"] +"_" +str(datosLlamada["duracion"])+".md"
+        df.to_markdown(archivo, index=False)
         
