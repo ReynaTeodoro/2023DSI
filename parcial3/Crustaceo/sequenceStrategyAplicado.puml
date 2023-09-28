@@ -1,0 +1,35 @@
+@startuml
+actor "Responsable de reclamos" as responsable
+control "Gestor de reclamos" as gestor
+participant "TasaCriticos" as s
+entity cliente
+entity pedido
+entity estado
+entity reclamo
+entity tipoReclamo
+boundary PantallaReporte
+
+gestor -> gestor : crearEstrategia()
+gestor --> s: new()
+gestor -> gestor: calcularTasaClientes()
+gestor -> s: calcularTasaClientes(fechaDesde,fechaHasta,clientes,pedidos)
+loop "Mientras hay clientes"
+loop "Mientras haya pedidos"
+  s -> pedido: esDeCliente(cliente):boolean
+  s-> pedido: esDePerido(fechaDesde,fechaHasta):boolean
+  s -> pedido: esEntregado():boolean
+  pedido -> estado: esEntregado():boolean
+  s -> pedido: esCobrado():boolean
+  pedido -> estado: esCobrado():boolean
+  s -> pedido: tieneReclamoCritico():boolean
+  pedido -> pedido: obtenerReclamo(): Reclamo
+  pedido -> reclamo : esCritico():boolean
+  reclamo -> tipoReclamo: esCritico():boolean
+end
+end
+s -> s: calcularTasaTotal()
+gestor -> gestor: generarReporte()
+gestor -> gestor: obtenerFechaActual()
+gestor -> PantallaReporte: visualizar()
+gestor -> gestor: finCU()
+@enduml

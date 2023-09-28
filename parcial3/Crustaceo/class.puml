@@ -14,7 +14,7 @@ class GestorReporteReclamos{
   generarReporte()
   tomarSeleccionTipoTasa()
 }
-class EstrategiaTasaReclamos <<interface>>{
+class IEstrategiaTasaReclamos <<interface>>{
   calcularTasaClientes(fechadesde, fechahasta, clientesSeleccionados,pedidos)
 }
 class TasaBruta <<estrategia>>{
@@ -33,16 +33,21 @@ class PantallaGeneracionReportesReclamos <<boundary>>{
   cmbTipoTasa
   tomarSeleccionTipoTasa()
 }
-note "contexto" as n1
+note "contexto" as n1 #pink
 n1 .. GestorReporteReclamos
-n1 ..EstrategiaTasaReclamos
 
-note left of  EstrategiaTasaReclamos
+note left of  IEstrategiaTasaReclamos #pink
 "Estrategia"
 end note
-GestorReporteReclamos .. EstrategiaTasaReclamos
-EstrategiaTasaReclamos <|-- TasaBruta
-EstrategiaTasaReclamos <|-- TasaNoCrititcos
-EstrategiaTasaReclamos <|-- TasaCriticos
+
+note "Estrategias Concretas" as n2 #pink
+TasaBruta .. n2
+TasaNoCrititcos .. n2
+TasaCriticos .. n2
+
+GestorReporteReclamos .. IEstrategiaTasaReclamos
+IEstrategiaTasaReclamos <|-- TasaBruta
+IEstrategiaTasaReclamos <|-- TasaNoCrititcos
+IEstrategiaTasaReclamos <|-- TasaCriticos
 PantallaGeneracionReportesReclamos .. GestorReporteReclamos
 @enduml
