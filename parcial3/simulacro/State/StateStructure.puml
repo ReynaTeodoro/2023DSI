@@ -1,0 +1,82 @@
+class GestorRegistrarAtencion{
+  - fechaHoraInicioAtencion: DateTime
+  + ocuparPuesto():void
+  + llamarCliente():void
+  + obtenerFechaHoraActual():DateTime
+}
+class PuestoDeTrabajo{
+  - descripcion: String
+  - estadoActual: Estado
+  - identificacion: int
+  - Ticket: ticketAtencion[]
+
+  + asignarTicketAAtender():void
+  + buscarAsignacionColaActual():void
+  + buscarTicketConMayorEspera():void
+  + getIdentificacion():int
+  + obtenerDatosTicket():void
+  + ocupar(): void
+  + setEstado():void
+}
+PuestoDeTrabajo --> Estado
+class Estado{
+  nombre: string
+  ambito: string
+
+  abrirOficina()
+  asignarCola()
+  asignarTicketAAtender(fechaHora:DateTime,puesto:PuestoDeTrabajo)
+  cerrarOficina()
+  cerrarSesion()
+  controlarCaducidad()
+  darBaja()
+  finalizarBackOfice()
+  finalizarFueraDeLinea()
+  iniciarBackOfice()
+  iniciarFueraDeLinea()
+  liberar()
+  ocupar()
+  ponerLibre()
+}
+class NoDisponible{
+  + asignarCola():void
+  + darBaja(): void
+  + darDeBaja():void
+}
+class DeBaja{
+  + abrirOficina()
+}
+class AsignadoCola{
+  + abrirOficina():void
+  + darDeBaja():void
+}
+class Disponible{
+  cerrarOficina():void
+  ponerLibre():void
+}
+class Libre{
+  iniciarBackOfice():void
+}
+class FueraDeLinea{
+  controlarCaducidad():void
+  finalizarFueraDeLinea():void
+}
+class EnBackOffice{
+  cerrarSesion():void
+  + finalizarBackOfice():void
+}
+class Atendiendo{
+  + liberar():void
+}
+class Ocupado{
+  asignarTicketAAtender():void
+}
+Estado <|-- NoDisponible
+Estado <|-- DeBaja
+Estado <|-- AsignadoCola
+Estado <|-- Disponible
+Estado <|-- Libre
+Estado <|-- FueraDeLinea
+Estado <|-- EnBackOffice
+Estado <|-- Atendiendo
+Estado <|-- Ocupado

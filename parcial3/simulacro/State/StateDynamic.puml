@@ -1,0 +1,23 @@
+control GestorRegistrarAtencion as ge
+entity "actual:PuestoTrabajo" as pt
+ge -> ge: ocuparPuesto()
+ge -> pt: ocupar()
+participant ":libre" as free
+pt -> free: ocupar(puesto:Puesto)
+participant ":ocupado" as busy
+free --> busy: new()
+free --> pt: setEstado(nuevo>Estado)
+ge -> ge: llamarACliente()
+note left: hasta aca es opcional por consigna en dinamico del paso 31
+ge -> ge: asignarTickerAPuesto()
+note left: metodo de enganche
+ge -> ge: obtenerFechaHoraActual()
+ge -> pt: asignarTicketAAtender(fechaHs:DateTime, ticket: Ticket)
+pt -> busy: asignarTicketAAtender(fechaHs:DateTime, ticketAtencion: Ticket, puesto: Puesto)
+participant ":atendiendo" as attending
+busy --> attending: new()
+entity "elegido:TicketAtencion" as ticket
+busy -> pt: setTicketAtencion(ticketAtencion:TicketAtencion)
+busy -> ticket: iniciarAtencion(fechaHs:DateTime)
+ticket -> ticket: setFechaHoraInicio(fechaHs:DateTime):DateTime
+busy ->pt: setEstado(nuevoEstado:Estado) 

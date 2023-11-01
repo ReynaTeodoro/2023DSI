@@ -1,0 +1,18 @@
+control GestorRegistrarAtencion as g
+boundary InterfazTV as Itv
+boundary InterfazParlante as Ip
+g -> g: llamarACliente() 
+note left:metodo de enganche
+g --> Itv: new():InterfazTv
+g --> Ip: new():InterfazParlante
+loop "[mientras haya interfaz para notificar]"
+    g -> g: suscribir(observador:IObservador):void
+end loop
+g -> g: notificar()
+note left: Crear y suscribir antes de esto
+loop 
+    g --> Itv: enviarNotificacion(Ticket:int,Puesto:int):void
+    Itv --> Itv: publicar():void
+end loop
+g --> Ip: enviarNotificacion(Ticket:int,Puesto:int):void
+Ip --> Ip: publicar():void

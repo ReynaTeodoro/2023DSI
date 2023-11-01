@@ -1,0 +1,50 @@
+interface ISujeto{
+  arrayObservadores IObservadores
+
+  suscribir(obs: IObservador)
+  eliminarObservador(obs: IObservador)
+  notificar():void
+}
+ISujeto ..> IObservadores
+interface IObservadores{
+  enviarNotificacion(ticket:Integer,puesto:Integer):void
+}
+
+class GestorRegistrarAtencion{
+  ticket: Ticket
+  fechaHoraInicioAtencion:DateTime
+  pantalla: String
+  parlante: String
+
+  eliminarObservador(obs: IObservador)
+  subscribir(obs: IObservador,[])
+  notificar()
+  llamarCliente()
+}
+
+GestorRegistrarAtencion ..|> ISujeto
+interface InterfazParlante{
+  nroTicket: Integer
+  puesto: Integer
+
+  new()
+  anunciar()
+  enviarNotificacion(ticket:Integer,puesto:Integer):void
+}
+
+interface InterfazTV{
+  nroTicket:Integer
+  puesto:Integer
+
+  new()
+  publicar()
+  enviarNotificacion(ticket:Integer,puesto:Integer)
+}
+InterfazParlante ..|> IObservadores
+InterfazTV ..|> IObservadores
+note as N1   
+ * atributos necesario
+  *parametros
+  * visibilidad -> privado o publico especialmente en singleton
+  * metodos necesarios 
+end note
