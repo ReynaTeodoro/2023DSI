@@ -1,0 +1,160 @@
+@startuml
+left to right direction
+interface IAgregado{
+    + crearIterador(elementos:Object[]):Iterador
+}
+interface IIterador{
+    + primero():void
+    + siguiente():void
+    + haTerminado():boolean
+    + elementoActual():Object
+    + cumpleFiltro(filtros:Object[]):boolean
+}
+class IteradorLlamadas<<iterator>>{
+  - actual:Integer
+  - elementos: Object[]
+
+  + primero():void
+  + siguiente():void
+  + haTerminado():boolean
+  + elementoActual():Object
+  + new(elem:Llamada[]):void
+  + cumpleFiltro(filtros:Object[]):void
+}
+IteradorLlamadas ..|> IIterador
+ControlConsultarEncuesta ..|> IAgregado
+ControlConsultarEncuesta ..> IteradorLlamadas
+
+
+entity Llamada <<entity>> {
+descripcionOperador
+detalleAccionRequerida
+duracion
+encuestaEnviada
+observacionAuditor
+respuestasDeEncuesta:RespuestaDeCliente
+cambioEstado:CambioEstado
+cliente:Cliente
+
+new()
+agregarCambioEstado()
+agregarRespuestaDeEncuesta()
+determinarEstadoInicial()
+esDePeriodo()
+tieneEncuestaRespondida()
+getDuracion()
+getNombreClienteLlamada()
+determinarUltimoEstado()
+getRespuestas()
+mostrarDatosLlamada()
+
+}
+
+entity RespuestaDeCliente <<entity>>{
+fechaEncuesta
+respuestaSeleccionada: RespuestaPosible
+
+new()
+getDescripcionRta()
+obtenerValorSeleccionado()
+obtenerEncuesta()
+getRespuesta()
+}
+
+entity RespuestaPosible <<entity>>{
+descripcion
+valor
+getRespuesta()
+getDescripcionRta()
+obtenerEncuesta()
+}
+
+entity Pregunta<<entity>>{
+respuesta: Respuesta
+pregunta
+
+esDePregunta()
+getDescripcion()
+obtenerEncuesta()
+}
+
+entity Encuesta<<entity>>{
+pregunta: Pregunta
+descripcion
+fechaFinVigencia
+
+new()
+esDeEncuesta()
+getDescripcionEncuesta()
+agregarPreguntas()
+}
+
+entity CambioEstado <<entity>>{
+fechaHoraInicio
+estado:Estado
+
+new()
+esEstadoInicial()
+getFechaHoraInicio()
+getNombreEstado()
+esUltimoCambioEstado()
+obtenerEstadoActual()
+}
+
+entity Estado <<entity>>{
+nombre
+
+new()
+esFinalizada()
+esIniciada()
+getNombre()
+}
+
+
+
+
+
+
+abstract ControlConsultarEncuesta<<Control>>{
+fechaHoraInicio
+fechaHoraFin
+llamadaSeleccionada
+llamdasEnPeriodoRespondidas
+formatoSeleccionado
+datosLlamada
+
+crearIterador(elementos:Llamada[]):Iterador
+consultarEncuesta()
+tomarSeleccionFechaInicio()
+tomarSeleccionFechaFin()
+buscarLlamadasRespondidas()
+tomarSeleccionLlamada()
+agregarLlamadaEnPerido()
+obtenerDatosLlamada()
+getDatosLlamada()
+tomarSeleccionFormato()
+generarInformeCSV()
+cancelarOperacion()
+generarImpresion()
+finCU()
+}
+
+IteradorLlamadas ..> Llamada
+
+Llamada -->"0..*" RespuestaDeCliente
+RespuestaDeCliente -->"1" RespuestaPosible
+Encuesta o--"1..*" Pregunta 
+Pregunta o--"1..*" RespuestaPosible
+
+Llamada -->"1..*"CambioEstado
+CambioEstado-->"1"Estado
+
+
+
+
+
+ControlConsultarEncuesta ..> Llamada
+ControlConsultarEncuesta ..> Encuesta
+
+
+@enduml

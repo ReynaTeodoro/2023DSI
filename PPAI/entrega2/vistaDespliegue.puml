@@ -39,7 +39,6 @@ node "Servidor de Base de datos" as NodeBD #E1F5FE{
 component [Base de Datos] #ffc77d
 }
 node Router <<device>>  #E1F5FE{
-  component [DecodificadorDTMF] as dmtf #fae4fc
   component [chipTelefonico] as c2 #fae4fc
 }
 node telefonoOperador <<device>> #E1F5FE{
