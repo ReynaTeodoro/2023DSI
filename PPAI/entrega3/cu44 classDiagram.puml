@@ -1,8 +1,29 @@
 @startuml
 left to right direction
-interface IAgregado{
-    + crearIterador(elementos:Object[]):Iterador
+entity CambioEstado <<entity>>{
+fechaHoraInicio
+estado:Estado
+
+new()
+esEstadoInicial()
+getFechaHoraInicio()
+getNombreEstado()
+esUltimoCambioEstado()
+obtenerEstadoActual()
 }
+
+entity Estado <<entity>>{
+nombre
+
+new()
+esFinalizada()
+esIniciada()
+getNombre()
+}
+interface IAgregado{
+    + crearIterador(elementos:Object[]):IIterador
+}
+
 interface IIterador{
     + primero():void
     + siguiente():void
@@ -11,7 +32,7 @@ interface IIterador{
     + cumpleFiltro(filtros:Object[]):boolean
 }
 class IteradorLlamadas<<iterator>>{
-  - actual:Integer
+  - actual:Object
   - elementos: Object[]
 
   + primero():void
@@ -19,11 +40,20 @@ class IteradorLlamadas<<iterator>>{
   + haTerminado():boolean
   + elementoActual():Object
   + new(elem:Llamada[]):void
-  + cumpleFiltro(filtros:Object[]):void
+  + cumpleFiltro(filtros:Object[]):boolean
 }
-IteradorLlamadas ..|> IIterador
-ControlConsultarEncuesta ..|> IAgregado
-ControlConsultarEncuesta ..> IteradorLlamadas
+
+class IteradorCambioEstado<<iterator>>{
+  - actual:Object
+  - elementos: Object[]
+
+  + primero():void
+  + siguiente():void
+  + haTerminado():boolean
+  + elementoActual():Object
+  + new(elem:CambioEstado[]):void
+  + cumpleFiltro(filtros:Object[]):boolean
+}
 
 
 entity Llamada <<entity>> {
@@ -47,71 +77,8 @@ getNombreClienteLlamada()
 determinarUltimoEstado()
 getRespuestas()
 mostrarDatosLlamada()
-
+crearIterador():IIterador
 }
-
-entity RespuestaDeCliente <<entity>>{
-fechaEncuesta
-respuestaSeleccionada: RespuestaPosible
-
-new()
-getDescripcionRta()
-obtenerValorSeleccionado()
-obtenerEncuesta()
-getRespuesta()
-}
-
-entity RespuestaPosible <<entity>>{
-descripcion
-valor
-getRespuesta()
-getDescripcionRta()
-obtenerEncuesta()
-}
-
-entity Pregunta<<entity>>{
-respuesta: Respuesta
-pregunta
-
-esDePregunta()
-getDescripcion()
-obtenerEncuesta()
-}
-
-entity Encuesta<<entity>>{
-pregunta: Pregunta
-descripcion
-fechaFinVigencia
-
-new()
-esDeEncuesta()
-getDescripcionEncuesta()
-agregarPreguntas()
-}
-
-entity CambioEstado <<entity>>{
-fechaHoraInicio
-estado:Estado
-
-new()
-esEstadoInicial()
-getFechaHoraInicio()
-getNombreEstado()
-esUltimoCambioEstado()
-obtenerEstadoActual()
-}
-
-entity Estado <<entity>>{
-nombre
-
-new()
-esFinalizada()
-esIniciada()
-getNombre()
-}
-
-
-
 
 
 
@@ -123,7 +90,7 @@ llamdasEnPeriodoRespondidas
 formatoSeleccionado
 datosLlamada
 
-crearIterador(elementos:Llamada[]):Iterador
+crearIterador(elementos:Llamada[],filtros:Object[]):IIterador
 consultarEncuesta()
 tomarSeleccionFechaInicio()
 tomarSeleccionFechaFin()
@@ -138,23 +105,22 @@ cancelarOperacion()
 generarImpresion()
 finCU()
 }
-
-IteradorLlamadas ..> Llamada
-
-Llamada -->"0..*" RespuestaDeCliente
-RespuestaDeCliente -->"1" RespuestaPosible
-Encuesta o--"1..*" Pregunta 
-Pregunta o--"1..*" RespuestaPosible
-
-Llamada -->"1..*"CambioEstado
 CambioEstado-->"1"Estado
+IteradorLlamadas ..> Llamada
+IteradorCambioEstado ..> CambioEstado
+Llamada -->"1..*"CambioEstado
 
 
 
-
+IteradorLlamadas ..|> IIterador
+IteradorCambioEstado ..|> IIterador
+ControlConsultarEncuesta ..|> IAgregado
+Llamada ..|> IAgregado
+ControlConsultarEncuesta ..> IteradorLlamadas
+Llamada ..> IteradorCambioEstado
 
 ControlConsultarEncuesta ..> Llamada
-ControlConsultarEncuesta ..> Encuesta
+
 
 
 @enduml
