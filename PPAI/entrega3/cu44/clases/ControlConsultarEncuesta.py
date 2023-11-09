@@ -1,13 +1,17 @@
 import csv
 import os
 import sys
-from clases.Llamada import llamadasBD
+from typing import List
+from clases.Iterator.IteratorLlamadas import IteratorLlamadas,iteradoresLlamadaBD
+from clases.Iterator.IAgregado import IAgregado
+from clases.Llamada import Llamada, llamadasBD
 from clases.Encuesta import encuestasBD
 from PyQt5.QtCore import QDate, QDateTime
 import pandas as pd
-class ControladorConsultaEncuesta:
+class ControladorConsultaEncuesta(IAgregado):
     listaLlamadas = llamadasBD
     listaEncuestas = encuestasBD
+    listaIteradores = iteradoresLlamadaBD
     listaPreguntas = []
     def consultarEncuesta(self, pantalla):
        self.fechaHoraInicio = None
@@ -24,6 +28,11 @@ class ControladorConsultaEncuesta:
                 # añade la pregunta a la lista de preguntas en memoria
                 self.listaPreguntas.append(pregunta)
 
+    def crear_iterador(self,elementos:List[Llamada],filtros:List[object]):
+        iterador = IteratorLlamadas().new(elementos,filtros)
+        self.listaIteradores.append(iterador)
+        return iterador
+        
     def tomarSeleccionFechaInicio(self, fecha):
         #recibe la fecha inicio en formato QDate y la convierte a datetime almacenada en fechaHoraInicio
         self.fechaHoraInicio = fecha.toPyDateTime()
@@ -38,14 +47,30 @@ class ControladorConsultaEncuesta:
     def buscarLlamadasRespondidas(self):
         #busca las llamadas que esten iniciadas y dentro del periodo previamente seleccioando
         self.llamadasEnPeriodoRespondidas = []
-        if len(self.listaLlamadas) > 0:
-            #loop mientras haya llamadas
-            for unaLlamada in self.listaLlamadas:
-                #si la llamada esta dentro del periodo y tiene encuesta respondida con 2 metodos
-                if (unaLlamada.esDePeriodo(self.fechaHoraInicio, self.fechaHoraFin) and unaLlamada.tieneEncuestaRespondida()):
-                    # agrega la llamada a la lista de llamadas en periodo para ser renderizada en la tabla
-                    self.agregarLlamadaEnPeriodo(unaLlamada)
+        # count = 0
+        # for i in self.listaLlamadas:
+        #     count += 1
+        #     print(i.getNombreClienteLlamada())
+        #     print(count)
 
+        # print("-------------------------------------")
+        filtros =[
+            ("esDePeriodo", (self.fechaHoraInicio, self.fechaHoraFin)),
+            ("tieneEncuestaRespondida", ())
+        ]
+        if len(self.listaLlamadas) > 0:
+            iteradorLlamadas = self.crear_iterador(self.listaLlamadas,filtros)
+            iteradorLlamadas.primero()
+            conter = 0
+            while not iteradorLlamadas.haTerminado():
+                
+                llamada = iteradorLlamadas.elementoActual()
+                if iteradorLlamadas.cumpleFiltro(filtros):
+                    self.agregarLlamadaEnPeriodo(llamada)
+                # conter += 1
+                # print(conter)
+                iteradorLlamadas.siguiente()
+                
         #el controlador le pide a la pantalla que actualize la tabla con las llamadas en periodo
         self.pantalla.actualizarTablaLlamadas(self.llamadasEnPeriodoRespondidas)
         #retorna la lista de llamadas en periodo
