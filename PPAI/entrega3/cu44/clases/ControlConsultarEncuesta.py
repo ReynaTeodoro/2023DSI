@@ -1,5 +1,6 @@
 import csv
 import os
+import platform
 import sys
 from typing import List
 from clases.Iterator.IteratorLlamadas import IteratorLlamadas,iteradoresLlamadaBD
@@ -144,10 +145,17 @@ class ControladorConsultaEncuesta(IAgregado):
         df = pd.DataFrame(datosLlamada)
         archivo = f"{directorio}/{datosLlamada['nombreCliente']}_{datosLlamada['ultimoEstado']}_{str(datosLlamada['duracion'])}.csv"
         df.to_csv(archivo, index=False)
-        directorio_actual = os.getcwd()
-        print(os.path.join(directorio_actual, directorio))
-        ruta_completa = f"explorer.exe {os.path.join(directorio_actual, directorio)}"
-        subprocess.run([ruta_completa], shell=True)
+        ruta_absoluta_pdf = os.path.abspath(directorio)
+        # Obtén el nombre del sistema operativo
+        sistema_operativo = platform.system()
+
+        # Abre el explorador de archivos en la ubicación del PDF según el sistema operativo
+        if sistema_operativo == "Windows":
+            os.system(f"start explorer /select,{ruta_absoluta_pdf}")
+        elif sistema_operativo == "Linux":
+            os.system(f"xdg-open {ruta_absoluta_pdf}")
+        else:
+            print("No se ha implementado el soporte para este sistema operativo.")
         
     def generarImpresion(self):
         # genera un archivo md con los datos de la llamada seleccionada
