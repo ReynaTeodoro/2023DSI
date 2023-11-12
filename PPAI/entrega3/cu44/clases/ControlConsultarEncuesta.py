@@ -5,15 +5,16 @@ from typing import List
 from clases.Iterator.IteratorLlamadas import IteratorLlamadas,iteradoresLlamadaBD
 from clases.Iterator.IAgregado import IAgregado
 from clases.Llamada import Llamada, llamadasBD
-from clases.Encuesta import encuestasBD
+from clases.Encuesta import encuestasBD,Encuesta
 from PyQt5.QtCore import QDate, QDateTime
 import pandas as pd
+import subprocess
 class ControladorConsultaEncuesta(IAgregado):
-    listaLlamadas = llamadasBD
-    listaEncuestas = encuestasBD
     listaIteradores = iteradoresLlamadaBD
     listaPreguntas = []
-    def consultarEncuesta(self, pantalla):
+    def consultarEncuesta(self, pantalla,session):
+       self.listaLlamadas = session.query(Llamada).all()
+       self.listaEncuestas = session.query(Encuesta).all()
        self.fechaHoraInicio = None
        self.fechaHoraFin = None
        self.llamadasEnPeriodoRespondidas = []
@@ -140,8 +141,12 @@ class ControladorConsultaEncuesta(IAgregado):
         #  }
         # df = pd.DataFrame(body)
         df = pd.DataFrame(datosLlamada)
-        archivo = "./informes/"+datosLlamada["nombreCliente"]+"_"+datosLlamada["ultimoEstado"] +"_" +str(datosLlamada["duracion"])+".csv"
+        archivo = f"{directorio}/{datosLlamada['nombreCliente']}_{datosLlamada['ultimoEstado']}_{str(datosLlamada['duracion'])}.csv"
         df.to_csv(archivo, index=False)
+        directorio_actual = os.getcwd()
+        print(os.path.join(directorio_actual, directorio))
+        ruta_completa = f"explorer.exe {os.path.join(directorio_actual, directorio)}"
+        subprocess.run([ruta_completa], shell=True)
         
     def generarImpresion(self):
         # genera un archivo md con los datos de la llamada seleccionada

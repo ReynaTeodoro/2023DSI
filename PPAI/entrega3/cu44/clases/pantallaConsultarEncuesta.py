@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import QMessageBox
 
 from datetime import datetime, timedelta
+from PyQt5.QtGui import QPalette, QColor
 from PyQt5 import QtCore, QtGui, QtWidgets
 from clases.ControlConsultarEncuesta import ControladorConsultaEncuesta
 import sys
-
+import qdarkstyle
 class Ui_PantallaConsultarEncuesta:
     def __init__(self, controlador) -> None:
         self.controlador = controlador
@@ -14,11 +15,29 @@ class Ui_PantallaConsultarEncuesta:
         PantallaConsultarEncuesta.resize(881, 705)
         self.centralwidget = QtWidgets.QWidget(PantallaConsultarEncuesta)
         self.centralwidget.setObjectName("centralwidget")
+        # Verificar la hora actual
+        hora_actual = QtCore.QTime.currentTime()
+
+        # Definir las horas de inicio y fin para el tema oscuro
+        hora_inicio_oscuro = QtCore.QTime(18, 0)  # Por ejemplo, a partir de las 6:00 PM
+        hora_fin_oscuro = QtCore.QTime(6, 0)  # Hasta las 6:00 AM del día siguiente
+
+        # Verificar si la hora actual está dentro del rango para el tema oscuro
+        tema_oscuro = hora_actual >= hora_inicio_oscuro or hora_actual < hora_fin_oscuro
+
+
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 881, 61))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.slider.setMaximum(1)
+        self.slider.setMinimum(0)
+        self.slider.setValue(1 if tema_oscuro else 0)
+        self.slider.valueChanged.connect(self.actualizar_tema_desde_slider)
+        layout = QtWidgets.QVBoxLayout(self.centralwidget)
+        layout.addWidget(self.slider, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignRight)
+        self.horizontalLayout.setContentsMargins(0, 20, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.fechaHoraFin_lbl = QtWidgets.QLabel(self.horizontalLayoutWidget)
         self.fechaHoraFin_lbl.setObjectName("fechaHoraFin_lbl")
@@ -107,7 +126,7 @@ class Ui_PantallaConsultarEncuesta:
 
         #muestra la pantalla
         PantallaConsultarEncuesta.show()
-
+        self.actualizar_tema()
     def retranslateUi(self, PantallaConsultarEncuesta):
         _translate = QtCore.QCoreApplication.translate
         PantallaConsultarEncuesta.setWindowTitle(_translate("PantallaConsultarEncuesta", "MainWindow"))
@@ -123,7 +142,30 @@ class Ui_PantallaConsultarEncuesta:
         self.formato_input.setItemText(1, _translate("PantallaConsultarEncuesta", "IMPRIMIR"))
         self.confirmar_btn.setText(_translate("PantallaConsultarEncuesta", "Generar Informe"))
 
-    def habilitarPantalla(self,controlador):
+    def actualizar_tema_desde_slider(self, value):
+        # Método llamado cuando se cambia el valor del slider
+        # El valor 0 podría representar light theme y 1 dark theme, o viceversa
+        tema_oscuro = value == 1
+        self.actualizar_tema(tema_oscuro)
+    def actualizar_tema(self, tema_oscuro=None):
+        # Método para aplicar el estilo oscuro o claro según la hora o el slider
+        if tema_oscuro is None:
+            # Verificar la hora actual
+            hora_actual = QtCore.QTime.currentTime()
+
+            # Definir las horas de inicio y fin para el tema oscuro
+            hora_inicio_oscuro = QtCore.QTime(18, 0)  # Por ejemplo, a partir de las 6:00 PM
+            hora_fin_oscuro = QtCore.QTime(6, 0)  # Hasta las 6:00 AM del día siguiente
+
+            # Verificar si la hora actual está dentro del rango para el tema oscuro
+            tema_oscuro = hora_actual >= hora_inicio_oscuro or hora_actual < hora_fin_oscuro
+        # Aplicar el estilo correspondiente
+        if tema_oscuro:
+            self.centralwidget.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        else:
+            # Aquí puedes definir tu propio estilo claro si lo deseas
+            self.centralwidget.setStyleSheet("")
+    def habilitarPantalla(self,controlador,session):
         #inicia la pantalla y llama al metodo consultarEncuesta del controlador para generarlo
         app = QtWidgets.QApplication(sys.argv)
         self.app = app
@@ -131,7 +173,7 @@ class Ui_PantallaConsultarEncuesta:
         ui = self
         ui.setupUi(PantallaConsultarEncuesta)
         #controlar ejecuta consultarEncuesta
-        controlador.consultarEncuesta(ui)
+        controlador.consultarEncuesta(ui,session)
         sys.exit(app.exec_())
 
     def tomarSeleccionFechaInicio(self):

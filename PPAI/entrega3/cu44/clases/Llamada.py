@@ -1,11 +1,32 @@
 
 from clases.CambioEstado import cambiosDeEstadoBD
 from clases.Cliente import clientesBD
-from clases.RespuestaDeCliente import respuestasDeClienteBD
-
+from clases.RespuestaDeCliente import respuestasDeClienteBD, RespuestaDeCliente
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from clases.base import Base
+from datetime import datetime
 llamadasBD = []
 
-class Llamada:
+class Llamada(Base):
+    __tablename__ = 'llamadas'
+    id = Column(Integer, primary_key=True)
+    descripcionOperador = Column(String)
+    detalleAccionRequerida = Column(String)
+    duracion = Column(Integer)
+    encuestaEnviada = Column(String)
+    observacionAuditor = Column(String)
+
+    encuestaEnviada_id = Column(Integer,ForeignKey('encuestas.id'))
+    encuestaEnviada = relationship("Encuesta", back_populates="llamadas")
+    
+    respuestasDeEncuesta = relationship("RespuestaDeCliente", back_populates="llamada")
+    
+    cliente_id = Column(Integer, ForeignKey('clientes.dni'))
+    cliente = relationship("Cliente", back_populates="llamadas")
+    
+    cambiosDeEstado = relationship("CambioEstado", back_populates="llamada")
+
     def __init__(self, descripcionOperador, detalleAccionRequerida, duracion, encuestaEnviada, ObservacionAuditor, respuestaDeEncuesta, cambioEstado, cliente):
         self.descripcionOperador = descripcionOperador
         self.detalleAccionRequerida = detalleAccionRequerida
@@ -29,7 +50,9 @@ class Llamada:
         for unCambioDeEstado in self.cambiosDeEstado:
             if unCambioDeEstado.esEstadoInicial():
                 # busca la fechaHoraInicio del cambio de estado iniciada
-                fechaHoraInicio = unCambioDeEstado.getFechaHoraInicio()
+                fechaHoraInicio = datetime.strptime(unCambioDeEstado.getFechaHoraInicio(), "%Y-%m-%d %H:%M:%S.%f")
+                print(fechaHoraInicio)
+                print(fechaInicio)
                 # verifica que el cambio de estado este en periodo
                 if fechaInicio <= fechaHoraInicio and fechaHoraInicio <= fechaFin:
                     return True

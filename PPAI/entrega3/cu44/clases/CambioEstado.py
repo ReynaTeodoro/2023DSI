@@ -1,8 +1,21 @@
 from clases.Estado import estadosBD
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from clases.base import Base
+
 cambiosDeEstadoBD = []
 
 
-class CambioEstado:
+class CambioEstado(Base):
+    __tablename__ = 'cambiosDeEstado'
+    id = Column(Integer, primary_key=True)
+    fechaHoraInicio = Column(String)
+
+    llamada_id = Column(Integer, ForeignKey('llamadas.id'))
+    llamada = relationship("Llamada", back_populates="cambiosDeEstado")
+
+    estado_id = Column(Integer, ForeignKey('estados.id'))
+    estado = relationship("Estado", back_populates="cambiosDeEstado")
     # El atributo estado es un objeto de la clase Estado
     def __init__(self, fechaHoraInicio, estado):
         self.fechaHoraInicio = fechaHoraInicio

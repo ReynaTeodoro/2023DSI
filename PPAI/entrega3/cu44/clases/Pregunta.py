@@ -1,6 +1,16 @@
 from clases.RespuestaPosible import respuestasPosiblesBD
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from clases.base import Base
 preguntasBD = []
-class Pregunta:
+class Pregunta(Base):
+    __tablename__ = 'preguntas'
+    id = Column(Integer, primary_key=True)
+    pregunta = Column(String)
+    respuestas = relationship("RespuestaPosible", back_populates="pregunta", cascade="all, delete-orphan")
+    
+    encuesta_id = Column(Integer, ForeignKey('encuestas.id'))
+    encuesta = relationship("Encuesta", back_populates="preguntas")
     def __init__(self, pregunta, respuestas):
         self.respuestas = respuestas
         self.pregunta = pregunta

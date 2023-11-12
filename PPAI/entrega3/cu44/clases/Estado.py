@@ -1,6 +1,13 @@
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from clases.base import Base
 estadosBD = []
 
-class Estado:
+class Estado(Base):
+    __tablename__ = 'estados'
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String)
+    cambiosDeEstado = relationship("CambioEstado", back_populates="estado")
     def __init__(self, nombre):
         self.nombre = nombre
 

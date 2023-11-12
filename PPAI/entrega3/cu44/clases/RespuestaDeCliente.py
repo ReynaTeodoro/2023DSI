@@ -1,7 +1,19 @@
 from clases.RespuestaPosible import respuestasPosiblesBD
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from clases.base import Base
 respuestasDeClienteBD = []
 
-class RespuestaDeCliente:
+class RespuestaDeCliente(Base):
+    __tablename__ = 'respuestasDeCliente'
+    id = Column(Integer, primary_key=True)
+    fechaEncuesta = Column(String)
+    respuestaSeleccionada_id = Column(Integer, ForeignKey('respuestasPosibles.id'))
+    respuestaSeleccionada = relationship("RespuestaPosible", back_populates="respuestasDeCliente")
+    
+    llamada_id = Column(Integer, ForeignKey('llamadas.id'))
+    llamada = relationship("Llamada", back_populates="respuestasDeEncuesta")
+
     def __init__(self, fechaEncuesta, respuestaSeleccionada):
         self.fechaEncuesta = fechaEncuesta
         self.respuestaSeleccionada = respuestaSeleccionada
