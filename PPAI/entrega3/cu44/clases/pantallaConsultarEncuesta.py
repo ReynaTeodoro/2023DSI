@@ -5,6 +5,8 @@ from PyQt5.QtGui import QPalette, QColor
 from PyQt5 import QtCore, QtGui, QtWidgets
 from clases.ControlConsultarEncuesta import ControladorConsultaEncuesta
 import sys
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QAbstractItemView
 import qdarkstyle
 class Ui_PantallaConsultarEncuesta:
     def __init__(self, controlador) -> None:
@@ -24,8 +26,6 @@ class Ui_PantallaConsultarEncuesta:
 
         # Verificar si la hora actual está dentro del rango para el tema oscuro
         tema_oscuro = hora_actual >= hora_inicio_oscuro or hora_actual < hora_fin_oscuro
-
-
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 881, 61))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
@@ -82,11 +82,12 @@ class Ui_PantallaConsultarEncuesta:
         self.llamadaSelected_tbl.setObjectName("llamadaSelected_tbl")
         self.llamadaSelected_tbl.setColumnCount(5)
         self.llamadaSelected_tbl.setHorizontalHeaderLabels(["Atributo","Valor","Descripcion Preguntas","Valor Seleccionado","Encuesta"])
+        
         self.llamadasEnPeriodo_lbl = QtWidgets.QLabel(self.centralwidget)
         self.llamadasEnPeriodo_lbl.setGeometry(QtCore.QRect(0, 80, 331, 16))
         self.llamadasEnPeriodo_lbl.setObjectName("llamadasEnPeriodo_lbl")
         self.datoLlamada_lbl = QtWidgets.QLabel(self.centralwidget)
-        self.datoLlamada_lbl.setGeometry(QtCore.QRect(10, 350, 231, 16))
+        self.datoLlamada_lbl.setGeometry(QtCore.QRect(10, 350, 250, 16))
         self.datoLlamada_lbl.setObjectName("datoLlamada_lbl")
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(0, 590, 871, 41))
@@ -117,6 +118,7 @@ class Ui_PantallaConsultarEncuesta:
         self.llamadas_tbl.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.llamadaSelected_tbl.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
+        
         # aca se determinan los eventos de los botones para ejecutar las funciones y recibir los datos del actor
         self.buscarLlamada_btn.clicked.connect(self.tomarSeleccionFechaInicio)
         self.buscarLlamada_btn.clicked.connect(self.tomarSeleccionFechaFin)
@@ -127,13 +129,46 @@ class Ui_PantallaConsultarEncuesta:
         #muestra la pantalla
         PantallaConsultarEncuesta.show()
         self.actualizar_tema()
+        #estilo de fuentes
+
+
+        #Mejoras de UX
+
+        self.llamadaSelected_tbl.setSelectionMode(QAbstractItemView.NoSelection)
+        self.llamadaSelected_tbl.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        self.llamadas_tbl.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.llamadas_tbl.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.llamadas_tbl.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        fuente = QFont('Arial', 12, QFont.Bold)  # Nombre de la fuente, tamaño y negrita
+        self.cancelar_btn.setFont(QFont('Arial', 15, QFont.Bold))
+        self.buscarLlamada_btn.setFont(fuente)
+        self.confirmar_btn.setFont(fuente)
+        fuenteLBL = QFont('Arial', 11)
+        self.datoLlamada_lbl.setFont(fuenteLBL)
+        self.fechaHoraFin_lbl.setFont(fuenteLBL)
+        self.fechaHoraInicio_lbl.setFont(fuenteLBL)
+        self.formato_lbl.setFont(fuenteLBL)
+        self.llamadasEnPeriodo_lbl.setFont(fuenteLBL)
+        self.formato_input.setFont(fuenteLBL)
+        self.fechaInicio_input.setFont(fuenteLBL)
+        self.fechaFin_input.setFont(fuenteLBL)
+        
+        
+
+        #Colores de botones
+        self.buscarLlamada_btn.setStyleSheet(f'background-color: {QColor.fromRgbF(0.5, 0.5, 0.5).name()};')
+        self.confirmar_btn.setStyleSheet(f'background-color: {QColor.fromRgbF(0.5, 0.5, 0.5).name()};')
+        self.cancelar_btn.setStyleSheet(f'background-color: {QColor.fromRgbF(0.9, 0.5, 0.5).name()};')
+
     def retranslateUi(self, PantallaConsultarEncuesta):
         _translate = QtCore.QCoreApplication.translate
         PantallaConsultarEncuesta.setWindowTitle(_translate("PantallaConsultarEncuesta", "MainWindow"))
         self.fechaHoraInicio_lbl.setText(_translate("PantallaConsultarEncuesta", "                       FechaHoraFin:"))
         self.fechaHoraFin_lbl.setText(_translate("PantallaConsultarEncuesta", "                   FechaHoraInicio:"))
         self.buscarLlamada_btn.setText(_translate("PantallaConsultarEncuesta", "Confirmar"))
-        self.cancelar_btn.setText(_translate("PantallaConsultarEncuesta", "cancelar"))
+        self.cancelar_btn.setText(_translate("PantallaConsultarEncuesta", "Cancelar"))
         self.llamadasEnPeriodo_lbl.setText(_translate("PantallaConsultarEncuesta", "Llamadas Iniciadas y en periodo seleccionada:"))
         self.datoLlamada_lbl.setText(_translate("PantallaConsultarEncuesta", "Datos de llamada seleccionada:"))
         self.formato_lbl.setText(_translate("PantallaConsultarEncuesta", "Seleccion de Formato:"))
@@ -155,7 +190,7 @@ class Ui_PantallaConsultarEncuesta:
 
             # Definir las horas de inicio y fin para el tema oscuro
             hora_inicio_oscuro = QtCore.QTime(18, 0)  # Por ejemplo, a partir de las 6:00 PM
-            hora_fin_oscuro = QtCore.QTime(6, 0)  # Hasta las 6:00 AM del día siguiente
+            hora_fin_oscuro = QtCore.QTime(8, 0)  # Hasta las 6:00 AM del día siguiente
 
             # Verificar si la hora actual está dentro del rango para el tema oscuro
             tema_oscuro = hora_actual >= hora_inicio_oscuro or hora_actual < hora_fin_oscuro

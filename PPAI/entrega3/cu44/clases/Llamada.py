@@ -1,14 +1,17 @@
 
-from clases.CambioEstado import cambiosDeEstadoBD
+from typing import List
+from clases.CambioEstado import CambioEstado, cambiosDeEstadoBD
 from clases.Cliente import clientesBD
 from clases.RespuestaDeCliente import respuestasDeClienteBD, RespuestaDeCliente
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from clases.base import Base
 from datetime import datetime
+from clases.Iterator.IteratorCambioEstado import IteratorCambioEstado,iteradoresCambioEstadoBD
+from clases.Iterator.IAgregado import IAgregado
 llamadasBD = []
 
-class Llamada(Base):
+class Llamada(IAgregado):
     __tablename__ = 'llamadas'
     id = Column(Integer, primary_key=True)
     descripcionOperador = Column(String)
@@ -16,7 +19,7 @@ class Llamada(Base):
     duracion = Column(Integer)
     encuestaEnviada = Column(String)
     observacionAuditor = Column(String)
-
+    listaIteradores = iteradoresCambioEstadoBD
     encuestaEnviada_id = Column(Integer,ForeignKey('encuestas.id'))
     encuestaEnviada = relationship("Encuesta", back_populates="llamadas")
     
@@ -38,6 +41,11 @@ class Llamada(Base):
         self.respuestasDeEncuesta = respuestaDeEncuesta
         self.cliente = cliente
 
+    def crear_iterador(self,elementos:List[CambioEstado],filtros:List[object]):
+        iterador = IteratorCambioEstado().new(elementos,filtros)
+        self.listaIteradores.append(iterador)
+        return iterador
+
     def agregarCambioEstado(self, unCambioDeEstado):
         self.cambiosDeEstado.append(unCambioDeEstado)
         
@@ -47,16 +55,23 @@ class Llamada(Base):
     def esDePeriodo(self, fechaInicio, fechaFin):
         # retorna boolean si la llamada esta dentro del periodo recibido por parametro
         #bucle mientas haya cambios de estado en la llamada
-        for unCambioDeEstado in self.cambiosDeEstado:
-            if unCambioDeEstado.esEstadoInicial():
-                # busca la fechaHoraInicio del cambio de estado iniciada
-                fechaHoraInicio = datetime.strptime(unCambioDeEstado.getFechaHoraInicio(), "%Y-%m-%d %H:%M:%S.%f")
-                print(fechaHoraInicio)
-                print(fechaInicio)
-                # verifica que el cambio de estado este en periodo
-                if fechaInicio <= fechaHoraInicio and fechaHoraInicio <= fechaFin:
-                    return True
-        return False
+        iteradorCambioEstado = self.crear_iterador(self.cambiosDeEstado,[])
+        filtros =[
+            ("esEstadoInicial", ())
+        ]
+        if len(self.cambiosDeEstado) > 0:
+            iteradorCambioEstado.primero()
+            counter = 0
+            while not iteradorCambioEstado.haTerminado():
+                unCambioEstado = iteradorCambioEstado.elementoActual()
+                if iteradorCambioEstado.cumpleFiltro(filtros):
+                    # busca la fechaHoraInicio del cambio de estado iniciada
+                    fechaHoraInicio = datetime.strptime(unCambioEstado.getFechaHoraInicio(), "%Y-%m-%d %H:%M:%S.%f")
+                    # verifica que el cambio de estado este en periodo
+                    if fechaInicio <= fechaHoraInicio and fechaHoraInicio <= fechaFin:
+                        return True
+                iteradorCambioEstado.siguiente()
+            return False
     
     def tieneEncuestaRespondida(self):
         # retorna true si en la coleccion de respuestas de encuesta hay al menos una respuesta

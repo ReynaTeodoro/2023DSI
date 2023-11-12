@@ -128,7 +128,6 @@ class GeneradorAleatorio:
         # Base.metadata.create_all(engine)
         # Creamos las tablas en la base de datos
         Base.metadata.create_all(engine)
-
         # Creamos una sesión para interactuar con la base de datos
         with Session(engine) as session:
             self.restaurarDB(session)

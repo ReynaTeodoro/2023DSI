@@ -5,7 +5,8 @@ clientesBD = []
 
 class Cliente(Base):
     __tablename__ = 'clientes'
-    dni = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
+    dni = Column(Integer)
     nombreCompleto = Column(String)
     nroCelular = Column(Integer)
     

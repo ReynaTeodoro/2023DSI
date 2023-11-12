@@ -8,3 +8,4 @@ engine = create_engine(sqlite_path, echo=True)
 # Creamos la instancia de la base de datos
 Base = declarative_base()
 
+

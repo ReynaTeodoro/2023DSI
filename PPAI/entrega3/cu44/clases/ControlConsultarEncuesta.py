@@ -10,6 +10,7 @@ from PyQt5.QtCore import QDate, QDateTime
 import pandas as pd
 import subprocess
 class ControladorConsultaEncuesta(IAgregado):
+    __abstract__ = True
     listaIteradores = iteradoresLlamadaBD
     listaPreguntas = []
     def consultarEncuesta(self, pantalla,session):
