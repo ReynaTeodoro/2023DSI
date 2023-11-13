@@ -174,6 +174,7 @@ class ControladorConsultaEncuesta(IAgregado):
         sistema_operativo = platform.system()
 
         # Abre el explorador de archivos en la ubicación del PDF según el sistema operativo
+        ruta_absoluta_pdf = os.path.abspath(directorio)
         if sistema_operativo == "Windows":
             os.system(f"start explorer /select,{ruta_absoluta_pdf}")
         elif sistema_operativo == "Linux":
