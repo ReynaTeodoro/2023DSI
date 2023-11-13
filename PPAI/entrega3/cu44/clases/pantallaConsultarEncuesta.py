@@ -14,7 +14,7 @@ class Ui_PantallaConsultarEncuesta:
 
     def setupUi(self, PantallaConsultarEncuesta):
         PantallaConsultarEncuesta.setObjectName("PantallaConsultarEncuesta")
-        PantallaConsultarEncuesta.resize(881, 705)
+        PantallaConsultarEncuesta.resize(881, 725)
         self.centralwidget = QtWidgets.QWidget(PantallaConsultarEncuesta)
         self.centralwidget.setObjectName("centralwidget")
         # Verificar la hora actual
@@ -102,6 +102,7 @@ class Ui_PantallaConsultarEncuesta:
         self.formato_input.setObjectName("formato_input")
         self.formato_input.addItem("")
         self.formato_input.addItem("")
+        self.formato_input.addItem("")
         self.horizontalLayout_2.addWidget(self.formato_input)
         self.confirmar_btn = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.confirmar_btn.setObjectName("confirmar_btn")
@@ -175,6 +176,7 @@ class Ui_PantallaConsultarEncuesta:
         self.formato_input.setToolTip(_translate("PantallaConsultarEncuesta", "<html><head/><body><p>Formato de informe</p></body></html>"))
         self.formato_input.setItemText(0, _translate("PantallaConsultarEncuesta", "CSV"))
         self.formato_input.setItemText(1, _translate("PantallaConsultarEncuesta", "IMPRIMIR"))
+        self.formato_input.setItemText(2, _translate("PantallaConsultarEncuesta", "AMBOS"))
         self.confirmar_btn.setText(_translate("PantallaConsultarEncuesta", "Generar Informe"))
 
     def actualizar_tema_desde_slider(self, value):

@@ -115,6 +115,9 @@ class ControladorConsultaEncuesta(IAgregado):
             self.generarInformeCSV()
         elif self.formatoSeleccionado == "IMPRIMIR":
             self.generarImpresion()
+        elif self.formatoSeleccionado == "AMBOS":
+            self.generarInformeCSV()
+            self.generarImpresion()
         else:
             raise ValueError(f'No se puede imprimir en formato {seleccion!r}')
         
