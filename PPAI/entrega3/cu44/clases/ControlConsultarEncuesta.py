@@ -171,4 +171,13 @@ class ControladorConsultaEncuesta(IAgregado):
         df = pd.DataFrame(datosLlamada)
         archivo = "./informes/"+datosLlamada["nombreCliente"]+"_"+datosLlamada["ultimoEstado"] +"_" +str(datosLlamada["duracion"])+".md"
         df.to_markdown(archivo, index=False)
+        sistema_operativo = platform.system()
+
+        # Abre el explorador de archivos en la ubicación del PDF según el sistema operativo
+        if sistema_operativo == "Windows":
+            os.system(f"start explorer /select,{ruta_absoluta_pdf}")
+        elif sistema_operativo == "Linux":
+            os.system(f"xdg-open {ruta_absoluta_pdf}")
+        else:
+            print("No se ha implementado el soporte para este sistema operativo.")
         
